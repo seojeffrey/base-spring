@@ -2,6 +2,8 @@ package jeff.baseproject.domain;
 
 
 
+import jeff.baseproject.utils.EncryptHash;
+
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -24,7 +26,7 @@ public class User {
     private Date refreshPassword;
     private int invalidLoginCount;
 
-    public User(String name, String email, int permission, boolean isStaff){
+    public User(String name, String email, String password, int permission, boolean isStaff){
         // 이메일 검증
         if(!isValidEmail(email))
         {
@@ -42,7 +44,11 @@ public class User {
         this.createDatetime = now;
         this.lastLoginDatetime = now;
         this.invalidLoginCount = 0;
-        changePassword(defaultPassword);
+        if (password.isEmpty()){
+            password = defaultPassword;
+        }
+
+        this.password = encryptPassword(password);
     }
 
     public Long getId() {
@@ -233,7 +239,7 @@ public class User {
 
     }
 
-    public String changePassword(String password)
+    public String encryptPassword(String password)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -241,7 +247,7 @@ public class User {
         cal.add(Calendar.MONTH, 6);
         this.refreshPassword = cal.getTime();
         // TODO(Jeff) - 암호화 준비
-        String newPassword = defaultPassword;
+        String newPassword = EncryptHash.encrypt(password,  "QkdkfkwWhgnc");
         return newPassword;
     }
 }
