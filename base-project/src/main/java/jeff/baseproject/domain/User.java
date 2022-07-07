@@ -1,13 +1,9 @@
 package jeff.baseproject.domain;
 
-
-
-import jeff.baseproject.utils.EncryptHash;
-
+import jeff.baseproject.utils.Encrypt;
+import jeff.baseproject.utils.Time;
 import java.security.InvalidParameterException;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,9 +17,9 @@ public class User {
     private int permission;
     private boolean isStaff;
     private boolean isActive;
-    private Date createDatetime;
-    private Date lastLoginDatetime;
-    private Date refreshPassword;
+    private LocalDateTime createDateTime;
+    private LocalDateTime lastLoginDateTime;
+    private LocalDateTime refreshPasswordDateTime;
     private int invalidLoginCount;
 
     public User(String name, String email, String password, int permission, boolean isStaff){
@@ -40,9 +36,9 @@ public class User {
         this.isStaff = isStaff;
         this.isActive = true;
 
-        Date now = new Date();
-        this.createDatetime = now;
-        this.lastLoginDatetime = now;
+        LocalDateTime now = Time.now();
+        this.createDateTime = now;
+        this.lastLoginDateTime = now;
         this.invalidLoginCount = 0;
         if (password.isEmpty()){
             password = defaultPassword;
@@ -108,28 +104,8 @@ public class User {
         isActive = active;
     }
 
-    public Date getCreateDatetime() {
-        return createDatetime;
-    }
-
-    public void setCreateDatetime(Date createDatetime) {
-        this.createDatetime = createDatetime;
-    }
-
-    public Date getLastLoginDatetime() {
-        return lastLoginDatetime;
-    }
-
-    public void setLastLoginDatetime(Date lastLoginDatetime) {
-        this.lastLoginDatetime = lastLoginDatetime;
-    }
-
-    public Date getRefreshPassword() {
-        return refreshPassword;
-    }
-
-    public void setRefreshPassword(Date refreshPassword) {
-        this.refreshPassword = refreshPassword;
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
     }
 
     public int getInvalidLoginCount() {
@@ -140,6 +116,21 @@ public class User {
         this.invalidLoginCount = invalidLoginCount;
     }
 
+    public LocalDateTime getLastLoginDateTime() {
+        return lastLoginDateTime;
+    }
+
+    public void setLastLoginDateTime(LocalDateTime lastLoginDateTime) {
+        this.lastLoginDateTime = lastLoginDateTime;
+    }
+
+    public LocalDateTime getRefreshPasswordDateTime() {
+        return refreshPasswordDateTime;
+    }
+
+    public void setRefreshPasswordDateTime(LocalDateTime refreshPasswordDateTime) {
+        this.refreshPasswordDateTime = refreshPasswordDateTime;
+    }
     public static boolean isValidEmail(String email) {
         boolean err = false;
         String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
@@ -241,15 +232,13 @@ public class User {
 
     public String encryptPassword(String password)
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
 
-        cal.add(Calendar.MONTH, 6);
-        this.refreshPassword = cal.getTime();
+        this.refreshPasswordDateTime = Time.now().plusMonths(6);
         // TODO(Jeff) - 암호화 준비
-        String newPassword = EncryptHash.encrypt(password,  "QkdkfkwWhgnc");
+        String newPassword = Encrypt.encryptHash(password);
         return newPassword;
     }
+
 }
 
 

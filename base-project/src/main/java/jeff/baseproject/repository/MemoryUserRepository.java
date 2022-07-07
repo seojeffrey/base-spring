@@ -1,6 +1,5 @@
 package jeff.baseproject.repository;
 
-import org.springframework.stereotype.Repository;
 import jeff.baseproject.domain.User;
 import java.util.*;
 

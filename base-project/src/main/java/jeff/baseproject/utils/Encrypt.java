@@ -5,9 +5,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class EncryptHash {
+public class Encrypt {
 
-    public static String encrypt(String password, String salt)
+    static String salt = "QkdkfkwWhgnc";
+    public static String encryptHash(String password)
     {
         try {
             String hex = "";
