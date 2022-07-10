@@ -28,7 +28,8 @@ public class UserController {
     public String create(UserForm userForm)
     {
         if (userForm.getPassword().equals(userForm.getRePassword())) {
-            User user = new User(userForm.getName(), userForm.getEmail(), userForm.getPassword(), 0, false);
+            User user = new User();
+            user.Set(userForm.getName(), userForm.getEmail(), userForm.getPassword(), 0, false);
             this.userService.join(user);
 
         }

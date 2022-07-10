@@ -1,21 +1,35 @@
 package jeff.baseproject;
 
 import jeff.baseproject.Service.UserService;
-import jeff.baseproject.repository.MemoryUserRepository;
+import jeff.baseproject.repository.JpaUserRepository;
+import jeff.baseproject.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.*;
+
 @Configuration
 public class SpringConfig {
-    @Bean
-    public UserService userService ()
+
+    private EntityManager em;
+
+    @Autowired
+    public SpringConfig(EntityManager em)
     {
-        return new UserService(memoryUserRepository());
+        this.em = em;
     }
 
     @Bean
-    public MemoryUserRepository memoryUserRepository ()
+    public UserService userService ()
     {
-        return new MemoryUserRepository();
+        return new UserService(UserRepository());
+    }
+
+    @Bean
+    public UserRepository UserRepository ()
+    {
+
+        return new JpaUserRepository(em);
     }
 }

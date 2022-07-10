@@ -2,14 +2,21 @@ package jeff.baseproject.domain;
 
 import jeff.baseproject.utils.Encrypt;
 import jeff.baseproject.utils.Time;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Entity
 public class User {
     private static final String defaultPassword = "1@2#Default_PassWord";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String password;
@@ -17,12 +24,12 @@ public class User {
     private int permission;
     private boolean isStaff;
     private boolean isActive;
-    private LocalDateTime createDateTime;
-    private LocalDateTime lastLoginDateTime;
-    private LocalDateTime refreshPasswordDateTime;
+    private LocalDateTime createDatetime;
+    private LocalDateTime lastLoginDatetime;
+    private LocalDateTime refreshPasswordDatetime;
     private int invalidLoginCount;
 
-    public User(String name, String email, String password, int permission, boolean isStaff){
+    public void Set(String name, String email, String password, int permission, boolean isStaff){
         // 이메일 검증
         if(!isValidEmail(email))
         {
@@ -37,8 +44,8 @@ public class User {
         this.isActive = true;
 
         LocalDateTime now = Time.now();
-        this.createDateTime = now;
-        this.lastLoginDateTime = now;
+        this.createDatetime = now;
+        this.lastLoginDatetime = now;
         this.invalidLoginCount = 0;
         if (password.isEmpty()){
             password = defaultPassword;
@@ -46,6 +53,7 @@ public class User {
 
         this.password = encryptPassword(password);
     }
+
 
     public Long getId() {
         return id;
@@ -104,10 +112,6 @@ public class User {
         isActive = active;
     }
 
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
     public int getInvalidLoginCount() {
         return invalidLoginCount;
     }
@@ -116,20 +120,28 @@ public class User {
         this.invalidLoginCount = invalidLoginCount;
     }
 
-    public LocalDateTime getLastLoginDateTime() {
-        return lastLoginDateTime;
+
+    public LocalDateTime getCreateDatetime() {
+        return createDatetime;
     }
 
-    public void setLastLoginDateTime(LocalDateTime lastLoginDateTime) {
-        this.lastLoginDateTime = lastLoginDateTime;
+    public void setCreateDatetime(LocalDateTime createDatetime) {
+        this.createDatetime = createDatetime;
+    }
+    public LocalDateTime getLastLoginDatetime() {
+        return lastLoginDatetime;
     }
 
-    public LocalDateTime getRefreshPasswordDateTime() {
-        return refreshPasswordDateTime;
+    public void setLastLoginDatetime(LocalDateTime lastLoginDatetime) {
+        this.lastLoginDatetime = lastLoginDatetime;
     }
 
-    public void setRefreshPasswordDateTime(LocalDateTime refreshPasswordDateTime) {
-        this.refreshPasswordDateTime = refreshPasswordDateTime;
+    public LocalDateTime getRefreshPasswordDatetime() {
+        return refreshPasswordDatetime;
+    }
+
+    public void setRefreshPasswordDatetime(LocalDateTime refreshPasswordDatetime) {
+        this.refreshPasswordDatetime = refreshPasswordDatetime;
     }
     public static boolean isValidEmail(String email) {
         boolean err = false;
@@ -233,11 +245,12 @@ public class User {
     public String encryptPassword(String password)
     {
 
-        this.refreshPasswordDateTime = Time.now().plusMonths(6);
+        this.refreshPasswordDatetime = Time.now().plusMonths(6);
         // TODO(Jeff) - 암호화 준비
         String newPassword = Encrypt.encryptHash(password);
         return newPassword;
     }
+
 
 }
 

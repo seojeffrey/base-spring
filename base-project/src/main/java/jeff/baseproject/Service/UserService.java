@@ -2,12 +2,16 @@ package jeff.baseproject.Service;
 
 import jeff.baseproject.domain.User;
 import jeff.baseproject.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
+    @Autowired
     public UserService(UserRepository userRepository)
     {
         this.userRepository = userRepository;
@@ -27,12 +31,12 @@ public class UserService {
                 });
     }
 
-    public List<User> findMembers() {
+    public List<User> findUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> findOne(Long memberId) {
-        return userRepository.findById(memberId);
+    public Optional<User> findOne(Long userId) {
+        return userRepository.findById(userId);
     }
 }
 
