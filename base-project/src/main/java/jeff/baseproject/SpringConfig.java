@@ -32,4 +32,5 @@ public class SpringConfig {
 
         return new JpaUserRepository(em);
     }
+
 }
